@@ -6,12 +6,12 @@ LABEL description="This docker image is ready for \
 developing with erlang software."
 LABEL maintainer="roger.garcia@guifi.net"
 
-ENV NODE_ROOT_DIR /usr/share/node
 
 RUN apt-get update && apt-get dist-upgrade -y \
-  && apt-get install -y libwxgtk3.0-dev libgl1-mesa-dev \
+  && apt-get install -y libwxgtk3.0 libwxgtk3.0-dev \
+  libgl1-mesa-glx libgl1-mesa-dev \
   libpng-dev libglu1-mesa build-essential \
-  curl libncurses5-dev \
+  curl libncurses5-dev libpng16-16 \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
@@ -27,12 +27,12 @@ WORKDIR /tmp/otp_src_20.2
 RUN ./configure && make && make install
 
 # Remove useless files
+WORKDIR /
 RUN rm -rf /tmp/otp_src_20.2
 
 # Remove useless packages
 RUN apt-get remove -y libwxgtk3.0-dev libgl1-mesa-dev \
   libpng-dev libglu1-mesa build-essential \
-  libncurses5-dev \
   && apt-get clean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/*
