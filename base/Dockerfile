@@ -6,6 +6,7 @@ LABEL description="This docker image is ready for \
 developing with erlang software."
 LABEL maintainer="roger.garcia@guifi.net"
 
+ENV USER=development USER_ID=1000 USER_GID=1000
 
 RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get install -y libwxgtk3.0 libwxgtk3.0-dev \
@@ -38,9 +39,23 @@ RUN apt-get remove -y libwxgtk3.0-dev libgl1-mesa-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Creating UNIX User for development (security reasons)
-RUN groupadd --system development && useradd --system --gid development development --create-home
+RUN groupadd --gid "${USER_GID}" "${USER}" && \
+    useradd \
+      --uid ${USER_ID} \
+      --gid ${USER_GID} \
+      --create-home \
+      --shell /bin/bash \
+      ${USER}
 
+# Copying script for setting userid and gid (host)
+COPY user-mapping.sh /
+RUN  chmod u+x user-mapping.sh
 
-EXPOSE 3000
+# Copying entrypoint
+COPY docker-entrypoint.sh /
+RUN  chmod u+x docker-entrypoint.sh
+
+# Running entrypoint script
+ENTRYPOINT ["./docker-entrypoint.sh"]
 
 CMD ["/bin/bash"]
