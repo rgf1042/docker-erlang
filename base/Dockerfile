@@ -10,7 +10,7 @@ ENV USER=development USER_ID=1000 USER_GID=1000
 
 RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get install -y libwxgtk3.0 libwxgtk3.0-dev \
-  libgl1-mesa-glx libgl1-mesa-dev \
+  libgl1-mesa-glx libgl1-mesa-dev gosu \
   libpng-dev libglu1-mesa build-essential \
   curl libncurses5-dev libpng16-16 \
   && apt-get clean \
@@ -55,7 +55,9 @@ RUN  chmod u+x user-mapping.sh
 COPY docker-entrypoint.sh /
 RUN  chmod u+x docker-entrypoint.sh
 
+# Setting user home as working dir
+WORKDIR /home/"${USER}"
 # Running entrypoint script
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["/bin/bash"]
+CMD ["gosu","${USER}","/bin/bash"]
