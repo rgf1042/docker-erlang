@@ -32,4 +32,4 @@ docker run -it -e DISPLAY=$DISPLAY -v "$PWD":/home/development/src \
 ```
 
 ### UID and GID stuff
-If your host user id (UID) and group id (GID) are different to 1000 (default values) yo have to set environment variables ```$HOST_USER_ID``` and ```$HOST_USER_GID``` with the correct values.
+If your host user id (UID) and group id (GID) are different to 1000 (default values) you have to set environment variables ```$HOST_USER_ID``` and ```$HOST_USER_GID``` with the correct values.
